@@ -1,0 +1,17 @@
+name: 'AI Code Guard'
+description: 'Automatically reviews pull requests using the power of AI'
+branding:
+  icon: 'git-pull-request'
+  color: 'green'
+
+inputs:
+  github-token:
+    description: 'GitHub token'
+    required: true
+  openai-api-key:
+    description: 'OpenAI API key'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
