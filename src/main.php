@@ -34,8 +34,12 @@ function getPrNumber(): string
 {
     $githubEventPath = getenv('GITHUB_EVENT_PATH');
     $eventData = json_decode(file_get_contents($githubEventPath), true);
-
-    return $eventData['pull_request']['number'];
+    if (isset($eventData['pull_request']['number'])) {
+        return (string)$eventData['pull_request']['number'];
+    } else {
+        echo "::error::Pull request number not found in event data.". PHP_EOL;
+        exit(1);
+    }
 }
 
 function hasLabel(string $pullRequestId, string $repoFullName, string $githubToken, string $targetLabel): bool
