@@ -5,7 +5,7 @@ declare(strict_types=1);
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 
-require 'vendor/autoload.php';
+require '/app/vendor/autoload.php';
 
 function main(): void
 {
@@ -34,10 +34,11 @@ function getPrNumber(): string
 {
     $githubEventPath = getenv('GITHUB_EVENT_PATH');
     $eventData = json_decode(file_get_contents($githubEventPath), true);
+
     if (isset($eventData['pull_request']['number'])) {
         return (string)$eventData['pull_request']['number'];
     } else {
-        echo "::error::Pull request number not found in event data.". PHP_EOL;
+        echo "::error::Pull request number not found in event data." . PHP_EOL;
         exit(1);
     }
 }
