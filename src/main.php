@@ -12,7 +12,7 @@ function main(): void
     $pullRequestId = getPrNumber();
     $repoFullName = getenv('GITHUB_REPOSITORY') ?: '';
 
-    if (hasLabel($pullRequestId, $repoFullName, getenv('GITHUB_TOKEN'), 'ai')) {
+    if (hasLabel($pullRequestId, $repoFullName, getenv('INPUT_GITHUB-TOKEN'), 'ai')) {
         $model = getenv('OPENAI_MODEL') ?: 'gpt-3.5-turbo'; // Default to gpt-3.5-turbo if no environment variable is set
 
         if (!in_array($model, ['gpt-4', 'gpt-4-32k', 'gpt-3.5-turbo'])) {
@@ -21,10 +21,10 @@ function main(): void
             exit(1);
         }
 
-        $prChanges = fetchPrChanges($pullRequestId, $repoFullName, getenv('GITHUB_TOKEN'));
-        $suggestions = fetchAiSuggestions($prChanges, getenv('OPENAI_API_KEY'), $model);
+        $prChanges = fetchPrChanges($pullRequestId, $repoFullName, getenv('INPUT_GITHUB-TOKEN'));
+        $suggestions = fetchAiSuggestions($prChanges, getenv('INPUT_OPENAI-API-KEY'), $model);
 
-        postCommentToPr($suggestions, $pullRequestId, $repoFullName, getenv('GITHUB_TOKEN'));
+        postCommentToPr($suggestions, $pullRequestId, $repoFullName, getenv('INPUT_GITHUB-TOKEN'));
     }
 }
 
