@@ -16,7 +16,7 @@ function main(): void
     $repoFullName = getenv('GITHUB_REPOSITORY') ?: '';
 
     if (hasLabel($pullRequestId, $repoFullName, getenv('INPUT_GITHUB-TOKEN'), 'ai')) {
-        $model = getenv('OPENAI_MODEL') ?: 'gpt-3.5-turbo'; // Default to gpt-3.5-turbo if no environment variable is set
+        $model = getenv('INPUT_OPENAI-MODEL') ?: 'gpt-3.5-turbo';
 
         if (!in_array($model, ['gpt-4', 'gpt-4-32k', 'gpt-3.5-turbo'])) {
             echo "::error::Invalid model specified. Please use either 'gpt-3.5-turbo', 'gpt-4' or 'gpt-4-32k'." .

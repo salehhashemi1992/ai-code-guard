@@ -11,6 +11,10 @@ inputs:
   openai-api-key:
     description: 'OpenAI API key'
     required: true
+  openai-model:
+    description: 'OpenAI model to be used for review'
+    required: false
+    default: 'gpt-3.5-turbo'
 
 runs:
   using: 'docker'
