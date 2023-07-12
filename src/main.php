@@ -7,6 +7,9 @@ use GuzzleHttp\Exception\GuzzleException;
 
 require '/app/vendor/autoload.php';
 
+/**
+ * @return void
+ */
 function main(): void
 {
     $pullRequestId = getPrNumber();
@@ -30,6 +33,11 @@ function main(): void
 
 main();
 
+/**
+ * Gets the pull request number from the GitHub event payload.
+ *
+ * @return string The pull request number
+ */
 function getPrNumber(): string
 {
     $githubEventPath = getenv('GITHUB_EVENT_PATH');
@@ -43,6 +51,16 @@ function getPrNumber(): string
     }
 }
 
+/**
+ * Checks if a pull request has a given label.
+ *
+ * @param string $pullRequestId The ID of the pull request
+ * @param string $repoFullName The full name of the repo (owner/repo)
+ * @param string $githubToken A GitHub API token
+ * @param string $targetLabel The name of the label to check for
+ *
+ * @return bool True if the label exists on the PR, false otherwise
+ */
 function hasLabel(string $pullRequestId, string $repoFullName, string $githubToken, string $targetLabel): bool
 {
     $client = new Client([
@@ -80,7 +98,15 @@ function hasLabel(string $pullRequestId, string $repoFullName, string $githubTok
     return false;
 }
 
-
+/**
+ * Fetches the changes made in a pull request.
+ *
+ * @param string $pullRequestId The ID of the pull request
+ * @param string $repoFullName The full name of the repo
+ * @param string $githubToken A GitHub API token
+ *
+ * @return string The pull request changes
+ */
 function fetchPrChanges(string $pullRequestId, string $repoFullName, string $githubToken): string
 {
     // The GitHub API endpoint to get the details of a pull request, including the files changed
@@ -111,6 +137,15 @@ function fetchPrChanges(string $pullRequestId, string $repoFullName, string $git
     }
 }
 
+/**
+ * Gets AI suggestions for the given pull request changes.
+ *
+ * @param string $prChanges The changes in markdown format
+ * @param string $openAiApiKey The OpenAI API key
+ * @param string $model The AI model to use
+ *
+ * @return string The generated suggestions
+ */
 function fetchAiSuggestions(string $prChanges, string $openAiApiKey, string $model): string
 {
     $prompt = generatePrompt($prChanges);
@@ -151,15 +186,50 @@ function fetchAiSuggestions(string $prChanges, string $openAiApiKey, string $mod
     }
 }
 
+/**
+ * Generates the prompt to send to the AI.
+ *
+ * @param string $prChanges The pull request changes
+ *
+ * @return string The prompt text
+ */
 function generatePrompt(string $prChanges): string
 {
-    return "Please review the following changes made in a pull request and suggest improvements:
-     \nPull request changes:
-     \n{$prChanges}
-     \nFormat your response as follows:
-     \nAI Suggested improvements: [Generated suggestions]";
+    $prompt = "As a valued member of our code review team, ";
+    $prompt .= "we'd like you to review the following changes made in a pull request. ";
+    $prompt .= "Please provide us with insightful advice to enhance the quality, maintainability, and readability of our code. ";
+    $prompt .= "Keep in mind that we're not looking for comments about deleted files ";
+    $prompt .= "or demands for additional comments and documentation in the code.\n\n";
+
+    $prompt .= "Here are the pull request changes:\n";
+    $prompt .= "```\n";
+    $prompt .= "$prChanges";
+    $prompt .= "```\n\n";
+
+    $prompt .= "We need your input in two parts:\n\n";
+    $prompt .= "1. Score the changes from 0 (worst) to 100 (best) based on your assessment.\n";
+    $prompt .= "2. Provide a short list of improvements. If code changes are needed, ";
+    $prompt .= "include them in your response. Remember to use markdown to format the code blocks appropriately.\n\n";
+
+    $prompt .= "Please format your response as follows:\n";
+    $prompt .= "**Score**: [Your score here and an emoji]\n\n";
+    $prompt .= "**Suggested AI Improvements:**\n";
+    $prompt .= "1. [First improvement suggestion]\n";
+    $prompt .= "2. [Second improvement suggestion]\n";
+    $prompt .= "...";
+
+    return $prompt;
 }
 
+
+/**
+ * Posts the AI suggestions as a comment on the PR.
+ *
+ * @param string $comment The comment body
+ * @param string $pullRequestId The PR ID
+ * @param string $repoFullName The full repo name
+ * @param string $githubToken A GitHub API token
+ */
 function postCommentToPr(string $comment, string $pullRequestId, string $repoFullName, string $githubToken): void
 {
     $apiEndpoint = "https://api.github.com/repos/{$repoFullName}/issues/{$pullRequestId}/comments";
