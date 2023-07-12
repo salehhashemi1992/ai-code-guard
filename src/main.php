@@ -157,7 +157,7 @@ function generatePrompt(string $prChanges): string
      \nPull request changes:
      \n{$prChanges}
      \nFormat your response as follows:
-     \nSuggested improvements: [Generated suggestions]";
+     \nAI Suggested improvements: [Generated suggestions]";
 }
 
 function postCommentToPr(string $comment, string $pullRequestId, string $repoFullName, string $githubToken): void
