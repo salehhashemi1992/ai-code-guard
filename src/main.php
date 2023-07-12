@@ -213,7 +213,7 @@ function generatePrompt(string $prChanges): string
 
     $prompt .= "Please format your response as follows:\n";
     $prompt .= "**Score**: [Your score here and an emoji]\n\n";
-    $prompt .= "**Suggested AI Improvements:**\n";
+    $prompt .= "**AI Suggested Improvements:**\n";
     $prompt .= "1. [First improvement suggestion]\n";
     $prompt .= "2. [Second improvement suggestion]\n";
     $prompt .= "...";
