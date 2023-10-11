@@ -49,7 +49,7 @@ The action accepts the following inputs:
 | `github-token`   | Yes | The GitHub API token for accessing the repository. |
 | `openai-api-key` | Yes | The API key for accessing the OpenAI API. |
 | `openai-model`   | No | Supported values are 'gpt-3.5-turbo', 'gpt-4', and 'gpt-4-32k'. Defaults to 'gpt-3.5-turbo'.|
-| `openai-model`   | No | The base URL for the GitHub API. Defaults to 'https://api.github.com'.|
+| `api-base-url`   | No | The base URL for the GitHub API. Defaults to 'https://api.github.com'.|
 
 ### Limitations
 Please note that AI is not perfect and should be used as a tool to assist in code review, not as a final decision-maker. Always review the suggestions made by the AI and apply your own judgement.
