@@ -13,15 +13,15 @@ To use this action in your GitHub repository, follow these steps:
 
 1. In your GitHub repository, add a secret named `OPENAI_API_KEY` that contains your OpenAI API key.
 2. Similarly, add a secret named `TOKEN` with your GitHub API token that grants access to the repository.
-3. Add the following workflow file to your repository in the .github/workflows directory, and name it ai_code_guard.yml:
+3. Add the following workflow file to your repository in the `.github/workflows` directory, and name it `ai_code_guard.yml`:
 
-```bash
+```yaml
 on:
   pull_request:
     types: [synchronize, reopened, labeled]
 
 jobs:
-  ai_commit_message:
+  ai-review:
     runs-on: ubuntu-latest
     permissions:
       contents: write
